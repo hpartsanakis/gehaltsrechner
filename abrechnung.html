@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <!-- Zeichensatz -->
+    <meta charset="UTF-8" />
+
+    <!-- Mobile Darstellung -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#1d4f8f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="LohnApp" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+    <title>Vergütungsabrechnung</title>
+
+    <!-- Gemeinsamer Style -->
+    <link rel="stylesheet" href="css/base.css?v=20260613" />
+
+    <!-- Nur Abrechnung-Style -->
+    <link rel="stylesheet" href="css/abrechnung.css?v=20260613" />
+  </head>
+
+  <body>
+    <main class="payroll-page">
+      <!-- Navigation -->
+      <nav class="nav">
+        <a href="index.html">Kalender</a>
+        <a class="active" href="abrechnung.html">Abrechnung</a>
+        <a href="neuberechnung.html">Neuberechnung</a>
+      </nav>
+
+      <!-- =====================================================
+           SEITE 1: LAUFENDE ABRECHNUNG
+      ====================================================== -->
+      <section class="payslip">
+        <header class="payslip-header">
+          <h1>
+            Vergütungsabrechnung
+            <input id="abrechnungTitel" value="Mai 2026" />
+          </h1>
+
+          <p>gilt als Bescheinigung, bitte aufbewahren</p>
+        </header>
+
+        <table class="payslip-table main-table">
+          <thead>
+            <tr>
+              <th colspan="2">(30 Steuertage / 30 SV-Tage)</th>
+              <th>
+                Lohnsteuerpflichtig (L)<br />
+                Sozialversicherungspflichtig (S)<br />
+                Einmalbezug (E)<br />
+                Auswirkung auf gesetzl. Brutto (G)
+              </th>
+              <th>Betrag EUR</th>
+            </tr>
+
+            <tr>
+              <th>Anzahl</th>
+              <th>Vergütungsbestandteile</th>
+              <th>Kennz.</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- Grundvergütung -->
+            <tr>
+              <td><input id="grundAnzahl" value="30,00" /></td>
+              <td>30stel Grundvergütung</td>
+              <td>GLS</td>
+              <td><input id="grundBetrag" value="5718,18" /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Schichtzulage 3,6%</td>
+              <td>GLS</td>
+              <td><input id="schichtzulageBetrag" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Hinweiszeile wie echte Abrechnung -->
+            <tr>
+              <td></td>
+              <td>360stel Urlaubs-/Weihnachtsgeld</td>
+              <td></td>
+              <td></td>
+            </tr>
+
+            <!-- Manuelle Sonderzahlungen -->
+            <tr>
+              <td><input id="urlaubsgeldAnzahl" value="0,00" /></td>
+              <td>Urlaubsgeld</td>
+              <td>GLSE</td>
+              <td><input id="urlaubsgeldBetrag" value="0,00" /></td>
+            </tr>
+
+            <tr>
+              <td><input id="weihnachtsgeldAnzahl" value="0,00" /></td>
+              <td>Weihnachtsgeld</td>
+              <td>GLSE</td>
+              <td><input id="weihnachtsgeldBetrag" value="0,00" /></td>
+            </tr>
+
+            <tr>
+              <td><input id="bonusAnzahl" value="0,00" /></td>
+              <td>Bonus</td>
+              <td>GLSE</td>
+              <td><input id="bonusBetrag" value="0,00" /></td>
+            </tr>
+
+            <tr>
+              <td><input id="extrasAnzahl" value="0,00" /></td>
+              <td>Extras</td>
+              <td>GLSE</td>
+              <td><input id="extrasBetrag" value="0,00" /></td>
+            </tr>
+
+            <!-- Fahrrad Leasing ist negativ, weil Minus am Ende steht -->
+            <tr>
+              <td></td>
+              <td>Leasingrate Fahrrad</td>
+              <td>GLS</td>
+              <td><input id="leasingrateFahrrad" value="68,61-" /></td>
+            </tr>
+
+            <!-- Summe Brutto -->
+            <tr class="total-row">
+              <td></td>
+              <td>Gesamtbruttobezüge</td>
+              <td></td>
+              <td id="gesamtBrutto">0,00</td>
+            </tr>
+
+            <!-- Sonstige Vergütungsbestandteile -->
+            <tr class="section-row">
+              <td></td>
+              <td colspan="3">Sonstige Vergütungsbestandteile</td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>BAV Entgelt sonst.</td>
+              <td>E</td>
+              <td><input id="bavSonst" value="0,00" readonly /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>BAV Entgelt lfd.</td>
+              <td></td>
+              <td><input id="bavLfd" value="5718,18" readonly /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Wandl. bAV sonst. Entgelt</td>
+              <td>LSE</td>
+              <td><input id="wandlBavSonst" value="0,00-" /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Wandl. bAV lfd. Entgelt</td>
+              <td>LS</td>
+              <td><input id="bavEigenbeitrag" value="57,18-" /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>geldwerter Vorteil Bike</td>
+              <td>GLS</td>
+              <td><input id="geldwerterVorteilBike" value="11,00" /></td>
+            </tr>
+
+            <tr class="total-row">
+              <td></td>
+              <td>Gesetzliches Brutto</td>
+              <td></td>
+              <td id="gesetzlichesBrutto">0,00</td>
+            </tr>
+
+            <!-- Gesetzliche Abzüge -->
+            <tr class="section-row">
+              <td></td>
+              <td colspan="3">Gesetzliche Abzüge</td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Lohnsteuer laufend</td>
+              <td></td>
+              <td><input id="lohnsteuerLaufend" value="0,00-" readonly /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Lohnsteuer SonstBezug</td>
+              <td></td>
+              <td>
+                <input id="lohnsteuerSonstBezug" value="0,00-" readonly />
+              </td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Rentenversicherung lfd. ANA: 9,30%</td>
+              <td></td>
+              <td><input id="rentenversicherungLfd" value="0,00-" /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Rentenversicherung Einmalbezug ANA: 9,30%</td>
+              <td></td>
+              <td>
+                <input id="rentenversicherungEinmalig" value="0,00-" readonly />
+              </td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Arbeitslosenvers. lfd. ANA: 1,30%</td>
+              <td></td>
+              <td><input id="arbeitslosenversicherungLfd" value="0,00-" /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Arbeitslosenvers. Einmalbezug ANA: 1,30%</td>
+              <td></td>
+              <td>
+                <input
+                  id="arbeitslosenversicherungEinmalig"
+                  value="0,00-"
+                  readonly
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Pflegeversicherung Einmalbezug ANA</td>
+              <td></td>
+              <td><input id="pflegeversicherungEinmalig" value="0,00-" /></td>
+            </tr>
+
+            <tr class="total-row">
+              <td></td>
+              <td>Summe gesetzl. Abzüge</td>
+              <td></td>
+              <td id="gesetzlicheAbzuege">0,00-</td>
+            </tr>
+
+            <tr class="total-row">
+              <td></td>
+              <td>Gesetzliches Netto</td>
+              <td></td>
+              <td id="gesetzlichesNetto">0,00</td>
+            </tr>
+
+            <!-- Sonstige Bezüge / Abzüge -->
+            <tr class="section-row">
+              <td></td>
+              <td colspan="3">Sonstige Bezüge/Abzüge</td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Freiw. Krankenvers.</td>
+              <td></td>
+              <td><input id="freiwKrankenversicherung" value="1034,63-" /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Freiw. Pflegevers.</td>
+              <td></td>
+              <td><input id="freiwPflegeversicherung" value="194,72-" /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>AGA freiw. Pflegevers.</td>
+              <td></td>
+              <td><input id="agaPflegeversicherung" value="104,63" /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>AGA freiw. Krankenvers.</td>
+              <td></td>
+              <td><input id="agaKrankenversicherung" value="517,31" /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Umwandl. Eigenbeitrag bAV</td>
+              <td></td>
+              <td><input id="umwandlEigenbeitragBav" value="0,00-" /></td>
+            </tr>
+
+            <tr class="total-row">
+              <td></td>
+              <td>Summe sonstige Be-/Abzüge</td>
+              <td></td>
+              <td id="sonstigeAbzuege">0,00-</td>
+            </tr>
+
+            <tr class="netto-row">
+              <td></td>
+              <td>Netto</td>
+              <td></td>
+              <td id="netto">0,00</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button id="abrechnungBerechnenBtn" class="print-btn">
+          Abrechnung berechnen
+        </button>
+
+        <div class="page-number">Seite 1 von 2</div>
+      </section>
+
+      <!-- =====================================================
+           SEITE 2: BEMESSUNG / STEUER / SV
+      ====================================================== -->
+      <section class="payslip payslip-page-two">
+        <header class="payslip-header">
+          <h1>
+            Vergütungsabrechnung
+            <input id="abrechnungTitel2" value="Mai 2026" />
+          </h1>
+
+          <p>gilt als Bescheinigung, bitte aufbewahren</p>
+        </header>
+
+        <!-- Bemessungsentgelte -->
+        <table class="payslip-info-table">
+          <tbody>
+            <tr class="section-row">
+              <td colspan="2">
+                Bemessungsentgelte für
+                <input id="bemessungsMonat" value="Mai 2026" />
+              </td>
+              <td>Betrag EUR</td>
+            </tr>
+
+            <tr>
+              <td colspan="2">Steuerpfl. Entgelt lfd</td>
+              <td><input id="steuerpflEntgeltLfd" value="0,00" readonly /></td>
+            </tr>
+
+            <tr>
+              <td colspan="2">Steuerpfl. Entgelt SonstBezug</td>
+              <td>
+                <input id="steuerpflEntgeltSonst" value="0,00" readonly />
+              </td>
+            </tr>
+
+            <tr>
+              <td colspan="2">RV-Entgelt laufend</td>
+              <td><input id="rvEntgeltLaufend" value="0,00" readonly /></td>
+            </tr>
+
+            <tr>
+              <td colspan="2">RV-Entgelt Einmalbezug</td>
+              <td><input id="rvEntgeltEinmal" value="0,00" readonly /></td>
+            </tr>
+
+            <tr>
+              <td colspan="2">ALV-Entgelt laufend</td>
+              <td><input id="alvEntgeltLaufend" value="0,00" readonly /></td>
+            </tr>
+
+            <tr>
+              <td colspan="2">ALV-Entgelt Einmalbezug</td>
+              <td><input id="alvEntgeltEinmal" value="0,00" readonly /></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Steuerdaten -->
+        <table class="payslip-info-table">
+          <tbody>
+            <tr class="section-row">
+              <td colspan="2">
+                Steuerdaten lt. Id-Nr.
+                <input id="steuerId" value="" />
+                Jahreswerte bis
+                <input id="steuerJahrBis" value="Mai 2026" />
+              </td>
+              <td>Betrag EUR</td>
+            </tr>
+
+            <tr>
+              <td>Steuerklasse</td>
+              <td><input id="steuerklasse" value="4" /></td>
+              <td>
+                Steuerpflichtiges Einkommen
+                <input id="steuerpflichtigesEinkommen" value="0,00" readonly />
+              </td>
+            </tr>
+
+            <tr>
+              <td>Anzahl Kinderfreibeträge</td>
+              <td><input id="kinderfreibetraege" value="0,0" /></td>
+              <td>
+                Lohnsteuer
+                <input id="jahresLohnsteuer" value="0,00" readonly />
+              </td>
+            </tr>
+
+            <tr>
+              <td>Kirche</td>
+              <td><input id="kirche" value="— /" /></td>
+              <td>
+                Kirchensteuer
+                <input id="kirchensteuer" value="0,00" />
+              </td>
+            </tr>
+
+            <tr>
+              <td>Steuerfreibetrag monatlich</td>
+              <td><input id="steuerfreibetragMonatlich" value="0,00" /></td>
+              <td>
+                Solidaritätszuschlag
+                <input id="soli" value="0,00" />
+              </td>
+            </tr>
+
+            <tr>
+              <td>Steuerfreibetrag jährlich</td>
+              <td><input id="steuerfreibetragJaehrlich" value="0,00" /></td>
+              <td>
+                Steuerfreie Zulagen
+                <input id="steuerfreieZulagen" value="0,00" readonly />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Sozialversicherung -->
+        <table class="payslip-sv-table">
+          <thead>
+            <tr>
+              <th>Sozialversicherung</th>
+              <th>Beitragspfl. Eink. €</th>
+              <th>ANA %</th>
+              <th>ANA €</th>
+              <th>AGA €</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>
+                SV-Nr.:
+                <input id="svNummer" value="" />
+                Krankenkasse:
+                <input
+                  id="krankenkasse"
+                  value=""
+                />
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>
+                Beitragsgruppenschlüssel:
+                <input id="beitragsgruppe" value="9 1 1 1" />
+              </td>
+            </tr>
+
+            <tr>
+              <td>
+                Geb.-Datum: <input id="geburtsdatum" value="" />
+              </td>
+              <td>Beitragspfl. Eink. €</td>
+              <td>ANA %</td>
+              <td>ANA €</td>
+              <td>AGA €</td>
+            </tr>
+
+            <tr>
+              <td>Krankenversicherung</td>
+              <td><input id="kvEinkommen" value="0,00" /></td>
+              <td><input id="kvAnaProzent" value="0,00" /></td>
+              <td><input id="kvAnaEuro" value="0,00" /></td>
+              <td><input id="kvAgaEuro" value="0,00" /></td>
+            </tr>
+
+            <tr>
+              <td>Pflegeversicherung</td>
+              <td><input id="pvEinkommen" value="0,00" /></td>
+              <td><input id="pvAnaProzent" value="0,00" /></td>
+              <td><input id="pvAnaEuro" value="0,00" /></td>
+              <td><input id="pvAgaEuro" value="0,00" /></td>
+            </tr>
+
+            <tr>
+              <td>Rentenversicherung laufend</td>
+              <td><input id="rvEinkommen" value="0,00" readonly /></td>
+              <td><input id="rvAnaProzent" value="9,30" /></td>
+              <td><input id="rvAnaEuro" value="0,00" readonly /></td>
+              <td><input id="rvAgaEuro" value="0,00" readonly /></td>
+            </tr>
+
+            <tr>
+              <td>Rentenversicherung Einmalbezug</td>
+              <td><input id="rvEinmalEinkommen" value="0,00" readonly /></td>
+              <td><input id="rvEinmalProzent" value="9,30" /></td>
+              <td><input id="rvEinmalAnaEuro" value="0,00" readonly /></td>
+              <td><input id="rvEinmalAgaEuro" value="0,00" readonly /></td>
+            </tr>
+
+            <tr>
+              <td>Arbeitslosenversicherung laufend</td>
+              <td><input id="alvEinkommen" value="0,00" readonly /></td>
+              <td><input id="alvAnaProzent" value="1,30" /></td>
+              <td><input id="alvAnaEuro" value="0,00" readonly /></td>
+              <td><input id="alvAgaEuro" value="0,00" readonly /></td>
+            </tr>
+
+            <tr>
+              <td>Arbeitslosenversicherung Einmalbezug</td>
+              <td><input id="alvEinmalEinkommen" value="0,00" readonly /></td>
+              <td><input id="alvEinmalProzent" value="1,30" /></td>
+              <td><input id="alvEinmalAnaEuro" value="0,00" readonly /></td>
+              <td><input id="alvEinmalAgaEuro" value="0,00" readonly /></td>
+            </tr>
+
+            <tr>
+              <td colspan="5">
+                Für den ANA zur Pflegeversicherung wurden folgende Kinderangaben
+                berücksichtigt:
+                <input id="beruecksichtigteKinder" value="2" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Sonstige Werte -->
+        <table class="payslip-info-table">
+          <tbody>
+            <tr class="section-row">
+              <td colspan="2">Sonstige Werte</td>
+              <td>Betrag EUR</td>
+            </tr>
+
+            <tr>
+              <td colspan="2">Basis U/K-Pauschale</td>
+              <td><input id="basisUkPauschale" value="3614,07" /></td>
+            </tr>
+
+            <tr>
+              <td colspan="2">
+                Stundenlohn: tariflich / steuerlich inkl. Schichtzulage
+              </td>
+              <td>
+                <input id="stundenlohnTariflich" value="35,08" />
+                /
+                <input id="stundenlohnSteuerlich" value="36,34" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="page-number">Seite 2 von 2</div>
+      </section>
+    </main>
+
+    <!-- Nur Abrechnung-Script -->
+    <script src="js/abrechnung.js?v=20260613"></script>
+    <script src="js/app.js?v=20260613"></script>
+  </body>
+</html>

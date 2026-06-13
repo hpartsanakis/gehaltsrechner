@@ -1,0 +1,159 @@
+/* ==========================================
+   KALENDER
+========================================== */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+  padding: 18px;
+}
+
+.controls {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.controls label {
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  font-weight: 800;
+  gap: 6px;
+}
+
+.controls input,
+.controls select {
+  min-width: 150px;
+}
+
+/* ==========================================
+   MONATSUEBERSICHT
+========================================== */
+
+.summary {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  margin-bottom: 18px;
+}
+
+.summary div {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+.summary span {
+  color: var(--muted);
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.summary strong {
+  color: var(--primary-dark);
+  display: block;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+/* ==========================================
+   TABELLE
+========================================== */
+
+.table-wrapper {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: auto;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+thead {
+  background: var(--primary-dark);
+  color: #ffffff;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--border);
+  padding: 10px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+th {
+  font-size: 13px;
+  font-weight: 900;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--surface-soft);
+}
+
+tbody tr:hover {
+  background: var(--primary-soft);
+}
+
+.shift-select {
+  min-width: 112px;
+}
+
+.hours-cell {
+  color: var(--primary-dark);
+  font-weight: 900;
+}
+
+.holiday-row,
+.holiday-row:nth-child(even) {
+  background: var(--warning-soft) !important;
+}
+
+.sunday-row,
+.sunday-row:nth-child(even) {
+  background: var(--primary-soft) !important;
+}
+
+.holiday-row.sunday-row {
+  background: #e8f3ff !important;
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 900px) {
+  .app {
+    width: min(100% - 20px, 1500px);
+    padding-top: 12px;
+  }
+
+  .controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .controls input,
+  .controls select,
+  .controls button {
+    width: 100%;
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+}

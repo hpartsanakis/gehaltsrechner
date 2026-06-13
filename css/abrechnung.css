@@ -1,0 +1,203 @@
+/* ==========================================
+   ABRECHNUNG
+========================================== */
+
+.payslip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding: 18px;
+}
+
+.payslip-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 14px;
+  text-align: left;
+}
+
+.payslip-header h1 {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.payslip-header h1 input {
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  color: var(--primary-dark);
+  font-size: 20px;
+  font-weight: 900;
+  min-height: 36px;
+  text-align: left;
+  width: 150px;
+}
+
+/* ==========================================
+   TABELLEN
+========================================== */
+
+.payslip-table,
+.payslip-info-table,
+.payslip-sv-table {
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.25;
+  min-width: 900px;
+  width: 100%;
+}
+
+.payslip-table th,
+.payslip-table td,
+.payslip-info-table th,
+.payslip-info-table td,
+.payslip-sv-table th,
+.payslip-sv-table td {
+  border: 1px solid var(--border);
+  padding: 7px 8px;
+  vertical-align: middle;
+}
+
+.payslip-table th,
+.payslip-info-table th,
+.payslip-sv-table th {
+  background: var(--primary-dark);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  text-align: left;
+}
+
+.payslip-table tr:nth-child(even) td,
+.payslip-info-table tr:nth-child(even) td,
+.payslip-sv-table tr:nth-child(even) td {
+  background: var(--surface-soft);
+}
+
+.payslip-table td:first-child {
+  text-align: right;
+  width: 92px;
+}
+
+.payslip-table td:nth-child(2) {
+  font-weight: 750;
+  min-width: 260px;
+}
+
+.payslip-table td:nth-child(3) {
+  text-align: center;
+  width: 88px;
+}
+
+.payslip-table td:nth-child(4),
+.payslip-table td:nth-child(5) {
+  font-weight: 850;
+  text-align: right;
+  width: 150px;
+}
+
+.payslip-table input,
+.payslip-info-table input,
+.payslip-sv-table input {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 800;
+  min-height: 30px;
+  padding: 4px 6px;
+  text-align: right;
+  width: 100%;
+}
+
+.payslip-table input:focus,
+.payslip-info-table input:focus,
+.payslip-sv-table input:focus {
+  background: #ffffff;
+  border-color: var(--primary);
+  outline: none;
+}
+
+.payslip-table input[readonly],
+.payslip-info-table input[readonly],
+.payslip-sv-table input[readonly] {
+  color: var(--primary-dark);
+}
+
+.section-row td {
+  background: var(--surface-muted) !important;
+  color: var(--primary-dark);
+  font-weight: 900;
+}
+
+.total-row td {
+  background: var(--primary-soft) !important;
+  color: var(--primary-dark);
+  font-weight: 900;
+}
+
+.netto-row td {
+  background: var(--success-soft) !important;
+  color: #14532d;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.payslip-info-table,
+.payslip-sv-table {
+  margin-top: 16px;
+}
+
+.payslip-info-table td:first-child,
+.payslip-sv-table td:first-child {
+  font-weight: 750;
+}
+
+.page-number {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 18px;
+  text-align: center;
+}
+
+/* ==========================================
+   DRUCK
+========================================== */
+
+@media print {
+  .payroll-page {
+    width: 100%;
+    padding: 0;
+  }
+
+  .payslip {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+  .payroll-page {
+    width: min(100% - 20px, 1180px);
+    padding-top: 12px;
+  }
+
+  .payslip {
+    padding: 12px;
+  }
+
+  .payslip-header h1 {
+    font-size: 20px;
+  }
+}

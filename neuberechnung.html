@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <!-- Zeichensatz -->
+    <meta charset="UTF-8" />
+
+    <!-- Mobile Darstellung -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#1d4f8f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="LohnApp" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+    <title>Neuberechnung</title>
+
+    <!-- Gemeinsame Styles -->
+    <link rel="stylesheet" href="css/base.css?v=20260613" />
+
+    <!-- Abrechnungs-Style -->
+    <link rel="stylesheet" href="css/abrechnung.css?v=20260613" />
+  </head>
+
+  <body>
+    <main class="payroll-page">
+      <!-- Navigation -->
+      <nav class="nav">
+        <a href="index.html">Kalender</a>
+        <a href="abrechnung.html">Abrechnung</a>
+        <a class="active" href="neuberechnung.html">Neuberechnung</a>
+      </nav>
+
+      <!-- =====================================================
+           SEITE 3: NEUBERECHNUNG AUS KALENDERDATEN
+      ====================================================== -->
+      <section class="payslip payslip-page-three">
+        <header class="payslip-header">
+          <h1>
+            Vergütungsabrechnung
+            <input id="abrechnungTitel" value="April 2026" />
+          </h1>
+
+          <p>Neuberechnung aus Kalenderdaten</p>
+        </header>
+
+        <table class="payslip-table main-table">
+          <thead>
+            <tr>
+              <th colspan="2">(30 Steuertage / 30 SV-Tage)</th>
+
+              <th>
+                Lohnsteuerpflichtig (L)<br />
+                Sozialversicherungspflichtig (S)<br />
+                Einmalbezug (E)<br />
+                Auswirkung auf gesetzl. Brutto (G)
+              </th>
+
+              <th>Betrag EUR</th>
+
+              <th>
+                Differenzen<br />
+                Neuberechnungen
+              </th>
+            </tr>
+
+            <tr>
+              <th>Anzahl</th>
+              <th>Vergütungsbestandteile</th>
+              <th>Kennz.</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <!-- Grundvergütung -->
+            <tr>
+              <td><input id="grundAnzahl" value="30,00" /></td>
+              <td>30stel Grundvergütung</td>
+              <td>GLS</td>
+              <td><input id="grundBetrag" value="5718,18" /></td>
+              <td><input id="grundDiff" value="0,00" /></td>
+            </tr>
+
+            <!-- Urlaubspauschale aus Kalender -->
+            <tr>
+              <td>
+                <input id="urlaubPauschaleAnzahl" value="0,00" readonly />
+              </td>
+              <td>Tg Urlaubspauschale</td>
+              <td>GLS</td>
+              <td>
+                <input id="urlaubPauschaleBetrag" value="0,00" readonly />
+              </td>
+              <td><input id="urlaubPauschaleDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Krankenspauschale aus Kalender -->
+            <tr>
+              <td><input id="krankPauschaleAnzahl" value="0,00" readonly /></td>
+              <td>Tg Krankenspauschale</td>
+              <td>GLS</td>
+              <td><input id="krankPauschaleBetrag" value="0,00" readonly /></td>
+              <td><input id="krankPauschaleDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Schichtzulage -->
+            <tr>
+              <td></td>
+              <td>Schichtzulage 3,6%</td>
+              <td>GLS</td>
+              <td><input id="schichtzulageBetrag" value="0,00" readonly /></td>
+              <td><input id="schichtzulageDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Leasingrate -->
+            <tr>
+              <td></td>
+              <td>Leasingrate Fahrrad</td>
+              <td>GLS</td>
+              <td><input id="leasingrateFahrrad" value="68,61-" /></td>
+              <td></td>
+            </tr>
+
+            <!-- Urlaubsgeld manuell -->
+            <tr>
+              <td><input id="urlaubsgeldAnzahl" value="0,00" /></td>
+              <td>Urlaubsgeld</td>
+              <td>GLSE</td>
+              <td><input id="urlaubsgeldBetrag" value="0,00" /></td>
+              <td><input id="urlaubsgeldDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Weihnachtsgeld manuell -->
+            <tr>
+              <td><input id="weihnachtsgeldAnzahl" value="0,00" /></td>
+              <td>Weihnachtsgeld</td>
+              <td>GLSE</td>
+              <td><input id="weihnachtsgeldBetrag" value="0,00" /></td>
+              <td><input id="weihnachtsgeldDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Bonus manuell -->
+            <tr>
+              <td><input id="bonusAnzahl" value="0,00" /></td>
+              <td>Bonus</td>
+              <td>GLSE</td>
+              <td><input id="bonusBetrag" value="0,00" /></td>
+              <td><input id="bonusDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Extras manuell -->
+            <tr>
+              <td><input id="extrasAnzahl" value="0,00" /></td>
+              <td>Extras</td>
+              <td>GLSE</td>
+              <td><input id="extrasBetrag" value="0,00" /></td>
+              <td><input id="extrasDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Nachtzuschlag 35 % -->
+            <tr>
+              <td><input id="nacht35Anzahl" value="0,00" readonly /></td>
+              <td>Nachtstunden GA 35%</td>
+              <td>GLS</td>
+              <td><input id="nacht35Betrag" value="0,00" readonly /></td>
+              <td><input id="nacht35Diff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Nachtzuschlag 50 % -->
+            <tr>
+              <td><input id="nacht50Anzahl" value="0,00" readonly /></td>
+              <td>Nachtstunden GA 50%</td>
+              <td>GLS</td>
+              <td><input id="nacht50Betrag" value="0,00" readonly /></td>
+              <td><input id="nacht50Diff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Sonntagszuschlag -->
+            <tr>
+              <td><input id="sonntagAnzahl" value="0,00" readonly /></td>
+              <td>Sonntagsstd. GA 55%</td>
+              <td>GLS</td>
+              <td><input id="sonntagBetrag" value="0,00" readonly /></td>
+              <td><input id="sonntagDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Feiertagszuschlag -->
+            <tr>
+              <td><input id="feiertagAnzahl" value="0,00" readonly /></td>
+              <td>Feiertagsstd. GA 50%</td>
+              <td>GLS</td>
+              <td><input id="feiertagBetrag" value="0,00" readonly /></td>
+              <td><input id="feiertagDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Gesamtbrutto -->
+            <tr class="total-row">
+              <td></td>
+              <td>Gesamtbruttobezüge</td>
+              <td></td>
+              <td id="gesamtBrutto">0,00</td>
+              <td id="gesamtBruttoDiff">0,00</td>
+            </tr>
+
+            <!-- Sonstige Vergütungsbestandteile -->
+            <tr class="section-row">
+              <td></td>
+              <td colspan="4">Sonstige Vergütungsbestandteile</td>
+            </tr>
+
+            <!-- Steuerfreie Zuschläge -->
+            <tr>
+              <td></td>
+              <td>Grundarb. steuerfrei</td>
+              <td>LS</td>
+              <td></td>
+              <td>
+                <input id="grundarbeitSteuerfrei" value="0,00" readonly />
+              </td>
+            </tr>
+
+            <!-- SV-pflichtiger Zuschlagsanteil -->
+            <tr>
+              <td></td>
+              <td>So/Fe/Na-Zuschl. SV-pf</td>
+              <td>S</td>
+              <td></td>
+              <td>
+                <input id="svPflichtigeZuschlaege" value="0,00" readonly />
+              </td>
+            </tr>
+
+            <!-- BAV laufend -->
+            <tr>
+              <td></td>
+              <td>BAV Entgelt lfd.</td>
+              <td></td>
+              <td><input id="bavEntgeltLfd" value="5718,18" readonly /></td>
+              <td><input id="bavEntgeltLfdDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- BAV Wandlung laufend -->
+            <tr>
+              <td></td>
+              <td>Wandl. bAV lfd. Entgelt</td>
+              <td>LS</td>
+              <td><input id="bavEigenbeitrag" value="57,18-" /></td>
+              <td><input id="bavEigenbeitragDiff" value="0,00" readonly /></td>
+            </tr>
+
+            <!-- Geldwerter Vorteil Bike -->
+            <tr>
+              <td></td>
+              <td>geldwerter Vorteil Bike</td>
+              <td>GLS</td>
+              <td><input id="geldwerterVorteilBike" value="11,00" /></td>
+              <td></td>
+            </tr>
+
+            <!-- Gesetzliches Brutto -->
+            <tr class="total-row">
+              <td></td>
+              <td>Gesetzliches Brutto</td>
+              <td></td>
+              <td id="gesetzlichesBrutto">0,00</td>
+              <td id="gesetzlichesBruttoDiff">0,00</td>
+            </tr>
+
+            <!-- Gesetzliche Abzüge -->
+            <tr class="section-row">
+              <td></td>
+              <td colspan="4">Gesetzliche Abzüge</td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Steuerklasse</td>
+              <td></td>
+              <td><input id="steuerklasse" value="4" /></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Kinderfreibeträge</td>
+              <td></td>
+              <td><input id="kinderfreibetraege" value="0,0" /></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Steuerfreibetrag monatlich</td>
+              <td></td>
+              <td><input id="steuerfreibetragMonatlich" value="0,00" /></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Steuerfreibetrag jährlich</td>
+              <td></td>
+              <td><input id="steuerfreibetragJaehrlich" value="0,00" /></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Lohnsteuer</td>
+              <td></td>
+              <td><input id="lohnsteuer" value="0,00-" readonly /></td>
+              <td><input id="lohnsteuerDiff" value="0,00-" readonly /></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Rentenversicherung lfd. ANA: 9,30%</td>
+              <td></td>
+              <td><input id="rentenversicherung" value="0,00-" /></td>
+              <td>
+                <input id="rentenversicherungDiff" value="0,00-" readonly />
+              </td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Arbeitslosenvers. lfd. ANA: 1,30%</td>
+              <td></td>
+              <td><input id="arbeitslosenversicherung" value="0,00-" /></td>
+              <td>
+                <input
+                  id="arbeitslosenversicherungDiff"
+                  value="0,00-"
+                  readonly
+                />
+              </td>
+            </tr>
+
+            <tr class="total-row">
+              <td></td>
+              <td>Gesetzl. Abzüge laufend</td>
+              <td></td>
+              <td id="gesetzlicheAbzuegeLaufend">0,00-</td>
+              <td id="gesetzlicheAbzuegeLaufendDiff">0,00-</td>
+            </tr>
+
+            <tr class="total-row">
+              <td></td>
+              <td>Summe gesetzl. Abzüge</td>
+              <td></td>
+              <td id="gesetzlicheAbzuege">0,00-</td>
+              <td id="gesetzlicheAbzuegeDiff">0,00-</td>
+            </tr>
+
+            <tr class="total-row">
+              <td></td>
+              <td>Gesetzliches Netto</td>
+              <td></td>
+              <td id="gesetzlichesNetto">0,00</td>
+              <td id="gesetzlichesNettoDiff">0,00</td>
+            </tr>
+
+            <!-- Sonstige Bezüge / Abzüge -->
+            <tr class="section-row">
+              <td></td>
+              <td colspan="4">Sonstige Bezüge/Abzüge</td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Freiw. Krankenvers.</td>
+              <td></td>
+              <td><input id="freiwKrankenversicherung" value="1034,63-" /></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Freiw. Pflegevers.</td>
+              <td></td>
+              <td><input id="freiwPflegeversicherung" value="194,72-" /></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>AGA freiw. Pflegevers.</td>
+              <td></td>
+              <td><input id="agaPflegeversicherung" value="104,63" /></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>AGA freiw. Krankenvers.</td>
+              <td></td>
+              <td><input id="agaKrankenversicherung" value="517,31" /></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Umwandl. Eigenbeitrag bAV</td>
+              <td></td>
+              <td><input id="umwandlEigenbeitragBav" value="57,18-" /></td>
+              <td></td>
+            </tr>
+
+            <tr class="total-row">
+              <td></td>
+              <td>Summe sonstige Be-/Abzüge</td>
+              <td></td>
+              <td id="sonstigeAbzuege">0,00-</td>
+              <td></td>
+            </tr>
+
+            <tr class="netto-row">
+              <td></td>
+              <td>Netto</td>
+              <td></td>
+              <td id="nettoNeu">0,00</td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Netto alt</td>
+              <td></td>
+              <td><input id="nettoAlt" value="0,00" /></td>
+              <td></td>
+            </tr>
+
+            <tr class="netto-row">
+              <td></td>
+              <td>Differenz</td>
+              <td></td>
+              <td id="nettoDifferenz">0,00</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Button startet die Berechnung -->
+        <button id="neuBerechnenBtn" class="print-btn">
+          Neuberechnung berechnen
+        </button>
+
+        <div class="page-number">Seite 3 von 3</div>
+      </section>
+    </main>
+
+    <!-- Script für Neuberechnung -->
+    <script src="js/neuberechnung.js?v=20260613"></script>
+    <script src="js/app.js?v=20260613"></script>
+  </body>
+</html>

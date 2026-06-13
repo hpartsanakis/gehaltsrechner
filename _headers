@@ -1,0 +1,16 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/sw.js
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: no-cache
+
+/icons/*.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/icons/*.svg
+  Cache-Control: public, max-age=31536000, immutable
