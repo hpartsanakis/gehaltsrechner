@@ -716,9 +716,8 @@ function calculateNeuberechnung() {
 
   const nettoNeu = gesetzlichesNetto + sonstigeAbzuege;
 
-  const previousPeriod = { month, year };
-  const currentPeriod = addMonths(previousPeriod, 1);
-  const nettoAlt = loadAbrechnungNettoForPeriod(previousPeriod);
+  const currentPeriod = addMonths({ month, year }, 1);
+  const nettoAlt = readMoney("nettoAlt");
   const nettoAktuelleAbrechnung = loadAbrechnungNettoForPeriod(currentPeriod);
   const nettoDifferenz = nettoNeu - nettoAlt;
   const ueberweisungsbetrag = nettoDifferenz + nettoAktuelleAbrechnung;
@@ -819,7 +818,6 @@ function calculateNeuberechnung() {
 
   writeText("nettoNeu", nettoNeu);
   writeText("nettoDifferenz", nettoDifferenz);
-  writeInput("nettoAlt", nettoAlt);
   writeInput("nettoAktuelleAbrechnung", nettoAktuelleAbrechnung);
   writeText("ueberweisungsbetrag", ueberweisungsbetrag);
 }
