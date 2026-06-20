@@ -14,6 +14,7 @@
 // Muss gleich sein wie im kalender.js
 const STORAGE_KEY = "schichtkalender";
 const ABRECHNUNG_RESULTS_KEY = "lohnapp:abrechnung:results";
+const ABRECHNUNG_RESULTS_BY_MONTH_KEY = "lohnapp:abrechnung:resultsByMonth";
 
 /* =====================================================
    GRUNDWERTE
@@ -65,14 +66,37 @@ function readMoney(id, fallback = 0) {
   return isNegative ? -number : number;
 }
 
-function loadAbrechnungNettoAlt() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(ABRECHNUNG_RESULTS_KEY)) || {};
-    const netto = Number(saved.netto);
+function makeMonthKey({ month, year }) {
+  return `${year}-${String(month + 1).padStart(2, "0")}`;
+}
 
-    return Number.isFinite(netto) ? netto : 0;
+function addMonths(period, amount) {
+  const date = new Date(period.year, period.month + amount, 1);
+
+  return {
+    month: date.getMonth(),
+    year: date.getFullYear(),
+  };
+}
+
+function loadAbrechnungNettoForPeriod(period) {
+  try {
+    const byMonth =
+      JSON.parse(localStorage.getItem(ABRECHNUNG_RESULTS_BY_MONTH_KEY)) || {};
+    const monthKey = makeMonthKey(period);
+    const saved = byMonth[monthKey] || {};
+    const netto = Number(saved.netto);
+    if (Number.isFinite(netto)) return netto;
+
+    const latest = JSON.parse(localStorage.getItem(ABRECHNUNG_RESULTS_KEY)) || {};
+    const latestNetto = Number(latest.netto);
+    if (latest.monthKey === monthKey && Number.isFinite(latestNetto)) {
+      return latestNetto;
+    }
+
+    return 0;
   } catch (error) {
-    console.error("Netto alt konnte nicht aus der Abrechnung gelesen werden.", error);
+    console.error("Netto konnte nicht aus der Abrechnung gelesen werden.", error);
     return 0;
   }
 }
@@ -692,9 +716,12 @@ function calculateNeuberechnung() {
 
   const nettoNeu = gesetzlichesNetto + sonstigeAbzuege;
 
-  const nettoAlt = loadAbrechnungNettoAlt();
+  const previousPeriod = { month, year };
+  const currentPeriod = addMonths(previousPeriod, 1);
+  const nettoAlt = loadAbrechnungNettoForPeriod(previousPeriod);
+  const nettoAktuelleAbrechnung = loadAbrechnungNettoForPeriod(currentPeriod);
   const nettoDifferenz = nettoNeu - nettoAlt;
-  const ueberweisungsbetrag = nettoDifferenz + nettoAlt;
+  const ueberweisungsbetrag = nettoDifferenz + nettoAktuelleAbrechnung;
 
   /* =====================================================
      AUSGABE IN DIE TABELLE
@@ -793,6 +820,7 @@ function calculateNeuberechnung() {
   writeText("nettoNeu", nettoNeu);
   writeText("nettoDifferenz", nettoDifferenz);
   writeInput("nettoAlt", nettoAlt);
+  writeInput("nettoAktuelleAbrechnung", nettoAktuelleAbrechnung);
   writeText("ueberweisungsbetrag", ueberweisungsbetrag);
 }
 

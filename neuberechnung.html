@@ -438,9 +438,19 @@
 
             <tr>
               <td></td>
-              <td>Netto aus Abrechnung</td>
+              <td>Netto Abrechnung vorheriger Monat</td>
               <td></td>
               <td><input id="nettoAlt" value="0,00" readonly /></td>
+              <td></td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td>Netto Abrechnung aktueller Monat</td>
+              <td></td>
+              <td>
+                <input id="nettoAktuelleAbrechnung" value="0,00" readonly />
+              </td>
               <td></td>
             </tr>
 
@@ -464,7 +474,7 @@
     </main>
 
     <!-- Script für Neuberechnung -->
-    <script src="js/neuberechnung.js?v=20260620transfer"></script>
+    <script src="js/neuberechnung.js?v=20260620monate"></script>
     <script src="js/app.js?v=20260613"></script>
   </body>
 </html>

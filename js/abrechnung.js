@@ -11,6 +11,38 @@
 const ABRECHNUNG_STORAGE_KEY = "lohnapp:abrechnung";
 const ABRECHNUNG_LAST_SAVE_KEY = "lohnapp:abrechnung:lastSaved";
 const ABRECHNUNG_RESULTS_KEY = "lohnapp:abrechnung:results";
+const ABRECHNUNG_RESULTS_BY_MONTH_KEY = "lohnapp:abrechnung:resultsByMonth";
+
+const MONTHS = {
+  januar: 0,
+  februar: 1,
+  märz: 2,
+  maerz: 2,
+  april: 3,
+  mai: 4,
+  juni: 5,
+  juli: 6,
+  august: 7,
+  september: 8,
+  oktober: 9,
+  november: 10,
+  dezember: 11,
+};
+
+const MONTH_LABELS = [
+  "Januar",
+  "Februar",
+  "März",
+  "April",
+  "Mai",
+  "Juni",
+  "Juli",
+  "August",
+  "September",
+  "Oktober",
+  "November",
+  "Dezember",
+];
 
 /* =========================
    ZAHLEN LESEN / SCHREIBEN
@@ -132,24 +164,52 @@ function saveAbrechnung() {
   updateAbrechnungSaveStatus();
 }
 
-function saveAbrechnungResults({ netto }) {
-  localStorage.setItem(
-    ABRECHNUNG_RESULTS_KEY,
-    JSON.stringify({
-      netto,
-      savedAt: new Date().toISOString(),
-    }),
-  );
-}
-
-function readPayrollYear() {
+function readPayrollPeriod() {
   const title =
     document.getElementById("abrechnungTitel")?.value ||
     document.getElementById("abrechnungTitel2")?.value ||
     "";
-  const year = Number(String(title).match(/\d{4}/)?.[0]);
+  const parts = title.trim().toLowerCase().split(/\s+/);
+  const month = MONTHS[parts[0]] ?? new Date().getMonth();
+  const year = Number(parts.find((part) => /^\d{4}$/.test(part))) || new Date().getFullYear();
 
-  return year || new Date().getFullYear();
+  return {
+    month,
+    year,
+    key: `${year}-${String(month + 1).padStart(2, "0")}`,
+    label: `${MONTH_LABELS[month]} ${year}`,
+  };
+}
+
+function saveAbrechnungResults({ netto }) {
+  const period = readPayrollPeriod();
+  const savedAt = new Date().toISOString();
+  const result = {
+    netto,
+    month: period.month,
+    year: period.year,
+    monthKey: period.key,
+    label: period.label,
+    savedAt,
+  };
+
+  localStorage.setItem(
+    ABRECHNUNG_RESULTS_KEY,
+    JSON.stringify(result),
+  );
+
+  try {
+    const byMonth =
+      JSON.parse(localStorage.getItem(ABRECHNUNG_RESULTS_BY_MONTH_KEY)) || {};
+    byMonth[period.key] = result;
+    localStorage.setItem(ABRECHNUNG_RESULTS_BY_MONTH_KEY, JSON.stringify(byMonth));
+  } catch (error) {
+    console.error("Abrechnungsergebnis konnte nicht pro Monat gespeichert werden.", error);
+  }
+}
+
+function readPayrollYear() {
+  return readPayrollPeriod().year;
 }
 
 function getTaxParameters(year) {
