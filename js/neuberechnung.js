@@ -13,6 +13,7 @@
 
 // Muss gleich sein wie im kalender.js
 const STORAGE_KEY = "schichtkalender";
+const ABRECHNUNG_RESULTS_KEY = "lohnapp:abrechnung:results";
 
 /* =====================================================
    GRUNDWERTE
@@ -62,6 +63,18 @@ function readMoney(id, fallback = 0) {
   if (Number.isNaN(number)) return fallback;
 
   return isNegative ? -number : number;
+}
+
+function loadAbrechnungNettoAlt() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(ABRECHNUNG_RESULTS_KEY)) || {};
+    const netto = Number(saved.netto);
+
+    return Number.isFinite(netto) ? netto : 0;
+  } catch (error) {
+    console.error("Netto alt konnte nicht aus der Abrechnung gelesen werden.", error);
+    return 0;
+  }
 }
 
 // Zahl deutsch formatieren
@@ -679,8 +692,8 @@ function calculateNeuberechnung() {
 
   const nettoNeu = gesetzlichesNetto + sonstigeAbzuege;
 
-  const nettoAlt = readMoney("nettoAlt");
-  const nettoDifferenz = nettoNeu - nettoAlt;
+  const nettoAlt = loadAbrechnungNettoAlt();
+  const ueberweisungsbetrag = nettoNeu + nettoAlt;
 
   /* =====================================================
      AUSGABE IN DIE TABELLE
@@ -777,7 +790,8 @@ function calculateNeuberechnung() {
   writeText("sonstigeAbzuege", sonstigeAbzuege);
 
   writeText("nettoNeu", nettoNeu);
-  writeText("nettoDifferenz", nettoDifferenz);
+  writeInput("nettoAlt", nettoAlt);
+  writeText("nettoDifferenz", ueberweisungsbetrag);
 }
 
 /* =====================================================

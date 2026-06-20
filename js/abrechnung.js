@@ -10,6 +10,7 @@
 
 const ABRECHNUNG_STORAGE_KEY = "lohnapp:abrechnung";
 const ABRECHNUNG_LAST_SAVE_KEY = "lohnapp:abrechnung:lastSaved";
+const ABRECHNUNG_RESULTS_KEY = "lohnapp:abrechnung:results";
 
 /* =========================
    ZAHLEN LESEN / SCHREIBEN
@@ -129,6 +130,16 @@ function saveAbrechnung() {
   localStorage.setItem(ABRECHNUNG_STORAGE_KEY, JSON.stringify(values));
   localStorage.setItem(ABRECHNUNG_LAST_SAVE_KEY, new Date().toISOString());
   updateAbrechnungSaveStatus();
+}
+
+function saveAbrechnungResults({ netto }) {
+  localStorage.setItem(
+    ABRECHNUNG_RESULTS_KEY,
+    JSON.stringify({
+      netto,
+      savedAt: new Date().toISOString(),
+    }),
+  );
 }
 
 function readPayrollYear() {
@@ -502,6 +513,7 @@ function calculateAbrechnung() {
   const netto = gesetzlichesNetto + sonstigeAbzuege;
 
   writeText("netto", netto);
+  saveAbrechnungResults({ netto });
 
   /* -------------------------
      11. Laufende Abrechnung hat keine steuerfreien Zulagen
