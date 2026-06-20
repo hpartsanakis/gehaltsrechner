@@ -20,10 +20,10 @@
     <title>Vergütungsabrechnung</title>
 
     <!-- Gemeinsamer Style -->
-    <link rel="stylesheet" href="css/base.css?v=20260613" />
+    <link rel="stylesheet" href="css/base.css?v=20260620" />
 
     <!-- Nur Abrechnung-Style -->
-    <link rel="stylesheet" href="css/abrechnung.css?v=20260613" />
+    <link rel="stylesheet" href="css/abrechnung.css?v=20260620" />
   </head>
 
   <body>
@@ -78,12 +78,6 @@
               <td><input id="grundBetrag" value="5718,18" /></td>
             </tr>
 
-            <tr>
-              <td></td>
-              <td>Schichtzulage 3,6%</td>
-              <td>GLS</td>
-              <td><input id="schichtzulageBetrag" value="0,00" readonly /></td>
-            </tr>
 
             <!-- Hinweiszeile wie echte Abrechnung -->
             <tr>
@@ -325,6 +319,9 @@
         <button id="abrechnungBerechnenBtn" class="print-btn">
           Abrechnung berechnen
         </button>
+        <p id="abrechnungSaveStatus" class="abrechnung-save-status">
+          Abrechnung automatisch gespeichert
+        </p>
 
         <div class="page-number">Seite 1 von 2</div>
       </section>
@@ -562,7 +559,7 @@
 
             <tr>
               <td colspan="2">
-                Stundenlohn: tariflich / steuerlich inkl. Schichtzulage
+                Stundenlohn: tariflich / steuerlich
               </td>
               <td>
                 <input id="stundenlohnTariflich" value="35,08" />
@@ -578,7 +575,7 @@
     </main>
 
     <!-- Nur Abrechnung-Script -->
-    <script src="js/abrechnung.js?v=20260613"></script>
+    <script src="js/abrechnung.js?v=20260620"></script>
     <script src="js/app.js?v=20260613"></script>
   </body>
 </html>

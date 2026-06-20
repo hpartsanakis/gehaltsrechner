@@ -5,6 +5,13 @@
 ===================================================== */
 
 /* =========================
+   SPEICHER
+========================= */
+
+const ABRECHNUNG_STORAGE_KEY = "lohnapp:abrechnung";
+const ABRECHNUNG_LAST_SAVE_KEY = "lohnapp:abrechnung:lastSaved";
+
+/* =========================
    ZAHLEN LESEN / SCHREIBEN
 ========================= */
 
@@ -78,6 +85,50 @@ function readNumber(id, fallback = 0) {
 
   const number = Number(value);
   return Number.isFinite(number) ? number : fallback;
+}
+
+function getPersistableInputs() {
+  return Array.from(document.querySelectorAll("input:not([readonly])"));
+}
+
+function updateAbrechnungSaveStatus(prefix = "Abrechnung gespeichert") {
+  const status = document.getElementById("abrechnungSaveStatus");
+  if (!status) return;
+
+  const lastSaved = localStorage.getItem(ABRECHNUNG_LAST_SAVE_KEY);
+  if (!lastSaved) {
+    status.textContent = "Abrechnung noch nicht gespeichert";
+    return;
+  }
+
+  const savedAt = new Date(lastSaved);
+  status.textContent = `${prefix}: ${savedAt.toLocaleString("de-DE", {
+    dateStyle: "short",
+    timeStyle: "short",
+  })}`;
+}
+
+function loadSavedAbrechnung() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(ABRECHNUNG_STORAGE_KEY)) || {};
+    getPersistableInputs().forEach((input) => {
+      if (Object.prototype.hasOwnProperty.call(saved, input.id)) {
+        input.value = saved[input.id];
+      }
+    });
+  } catch (error) {
+    console.error("Abrechnung konnte nicht geladen werden.", error);
+  }
+}
+
+function saveAbrechnung() {
+  const values = {};
+  getPersistableInputs().forEach((input) => {
+    if (input.id) values[input.id] = input.value;
+  });
+  localStorage.setItem(ABRECHNUNG_STORAGE_KEY, JSON.stringify(values));
+  localStorage.setItem(ABRECHNUNG_LAST_SAVE_KEY, new Date().toISOString());
+  updateAbrechnungSaveStatus();
 }
 
 function readPayrollYear() {
@@ -241,10 +292,6 @@ function calculateAbrechnung() {
 
   const grund = readMoney("grundBetrag");
 
-  // Schichtzulage 3,6 % von Grundvergütung
-  const schichtzulage = grund * 0.036;
-  writeInput("schichtzulageBetrag", schichtzulage);
-
   // Sonderzahlungen manuell
   const urlaubsgeld = readMoney("urlaubsgeldBetrag");
   const weihnachtsgeld = readMoney("weihnachtsgeldBetrag");
@@ -259,7 +306,6 @@ function calculateAbrechnung() {
 
      Gesamtbrutto =
      Grundvergütung
-     + Schichtzulage
      + Urlaubsgeld
      + Weihnachtsgeld
      + Bonus
@@ -269,7 +315,6 @@ function calculateAbrechnung() {
 
   const gesamtBrutto =
     grund +
-    schichtzulage +
     urlaubsgeld +
     weihnachtsgeld +
     bonus +
@@ -472,13 +517,22 @@ function calculateAbrechnung() {
 document.addEventListener("DOMContentLoaded", () => {
   const button = document.getElementById("abrechnungBerechnenBtn");
 
+  loadSavedAbrechnung();
+
   if (button) {
-    button.addEventListener("click", calculateAbrechnung);
+    button.addEventListener("click", () => {
+      calculateAbrechnung();
+      saveAbrechnung();
+    });
   }
 
   document.querySelectorAll("input").forEach((input) => {
-    input.addEventListener("input", calculateAbrechnung);
+    input.addEventListener("input", () => {
+      calculateAbrechnung();
+      saveAbrechnung();
+    });
   });
 
   calculateAbrechnung();
+  updateAbrechnungSaveStatus();
 });
