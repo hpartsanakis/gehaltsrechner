@@ -1,4 +1,4 @@
-const CACHE_NAME = "lohnapp-https-20260620-3";
+const CACHE_NAME = "lohnapp-https-20260620-4";
 
 const APP_SHELL = [
   "./",
@@ -12,7 +12,7 @@ const APP_SHELL = [
   "./js/app.js?v=20260620",
   "./js/kalender.js?v=20260620",
   "./js/abrechnung.js?v=20260620netto",
-  "./js/neuberechnung.js?v=20260620netto",
+  "./js/neuberechnung.js?v=20260620transfer",
   "./icons/app-icon.svg",
   "./icons/apple-touch-icon.png",
   "./icons/icon-192.png",

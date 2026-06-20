@@ -693,7 +693,8 @@ function calculateNeuberechnung() {
   const nettoNeu = gesetzlichesNetto + sonstigeAbzuege;
 
   const nettoAlt = loadAbrechnungNettoAlt();
-  const ueberweisungsbetrag = nettoNeu + nettoAlt;
+  const nettoDifferenz = nettoNeu - nettoAlt;
+  const ueberweisungsbetrag = nettoDifferenz + nettoAlt;
 
   /* =====================================================
      AUSGABE IN DIE TABELLE
@@ -790,8 +791,9 @@ function calculateNeuberechnung() {
   writeText("sonstigeAbzuege", sonstigeAbzuege);
 
   writeText("nettoNeu", nettoNeu);
+  writeText("nettoDifferenz", nettoDifferenz);
   writeInput("nettoAlt", nettoAlt);
-  writeText("nettoDifferenz", ueberweisungsbetrag);
+  writeText("ueberweisungsbetrag", ueberweisungsbetrag);
 }
 
 /* =====================================================
