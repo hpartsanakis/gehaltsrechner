@@ -32,6 +32,34 @@
   min-width: 150px;
 }
 
+.import-label {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  color: var(--primary-dark);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 15px;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 40px;
+  padding: 9px 14px;
+}
+
+.import-label input {
+  display: none;
+}
+
+.save-status {
+  align-self: center;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  margin-left: auto;
+  min-width: 190px;
+}
+
 /* ==========================================
    MONATSUEBERSICHT
 ========================================== */
@@ -149,8 +177,14 @@ tbody tr:hover {
 
   .controls input,
   .controls select,
-  .controls button {
+  .controls button,
+  .import-label,
+  .save-status {
     width: 100%;
+  }
+
+  .save-status {
+    margin-left: 0;
   }
 
   .summary {

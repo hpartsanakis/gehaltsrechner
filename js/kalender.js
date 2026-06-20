@@ -9,6 +9,8 @@
 ========================= */
 
 const STORAGE_KEY = "schichtkalender";
+const LAST_SAVE_KEY = "schichtkalender:lastSaved";
+const VIEW_KEY = "schichtkalender:selectedView";
 
 /* =========================
    SCHICHTEN
@@ -114,6 +116,82 @@ function loadCalendarData() {
 // Kalenderdaten speichern
 function saveCalendarData(data) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(LAST_SAVE_KEY, new Date().toISOString());
+  updateSaveStatus("Gespeichert");
+}
+
+function loadSelectedView() {
+  try {
+    return JSON.parse(localStorage.getItem(VIEW_KEY)) || null;
+  } catch (error) {
+    console.error("Kalenderansicht konnte nicht gelesen werden.", error);
+    return null;
+  }
+}
+
+function saveSelectedView(month, year) {
+  localStorage.setItem(VIEW_KEY, JSON.stringify({ month, year }));
+}
+
+function updateSaveStatus(prefix = "Automatisch gespeichert") {
+  const saveStatus = document.getElementById("saveStatus");
+  if (!saveStatus) return;
+
+  const lastSaved = localStorage.getItem(LAST_SAVE_KEY);
+  if (!lastSaved) {
+    saveStatus.textContent = "Noch keine Speicherung";
+    return;
+  }
+
+  const savedAt = new Date(lastSaved);
+  saveStatus.textContent = `${prefix}: ${savedAt.toLocaleString("de-DE", {
+    dateStyle: "short",
+    timeStyle: "short",
+  })}`;
+}
+
+function exportCalendarData() {
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    type: "lohnapp-schichtkalender",
+    version: 1,
+    shifts: loadCalendarData(),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `schichtkalender-${new Date().toISOString().slice(0, 10)}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function importCalendarData(file) {
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    try {
+      const imported = JSON.parse(String(reader.result || "{}"));
+      const shifts = imported.shifts && typeof imported.shifts === "object"
+        ? imported.shifts
+        : imported;
+
+      if (!shifts || Array.isArray(shifts) || typeof shifts !== "object") {
+        throw new Error("ungueltiges Format");
+      }
+
+      saveCalendarData(shifts);
+      renderCalendar();
+      updateSaveStatus("Importiert und gespeichert");
+    } catch (error) {
+      console.error("Kalenderdaten konnten nicht importiert werden.", error);
+      alert("Die Kalenderdatei konnte nicht gelesen werden.");
+    }
+  });
+  reader.readAsText(file);
 }
 
 /* =========================
@@ -288,6 +366,7 @@ function renderCalendar() {
   if (!calendarBody) return;
 
   const { month, year } = getSelectedMonthYear();
+  saveSelectedView(month, year);
 
   const calendarData = loadCalendarData();
   const holidays = getHessenHolidays(year);
@@ -472,13 +551,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const yearInput = document.getElementById("yearInput");
   const createCalendarBtn = document.getElementById("createCalendarBtn");
   const clearMonthBtn = document.getElementById("clearMonthBtn");
+  const exportCalendarBtn = document.getElementById("exportCalendarBtn");
+  const importCalendarInput = document.getElementById("importCalendarInput");
 
   if (!monthSelect || !yearInput) return;
 
   const today = new Date();
+  const savedView = loadSelectedView();
 
-  monthSelect.value = today.getMonth();
-  yearInput.value = today.getFullYear();
+  monthSelect.value = savedView?.month ?? today.getMonth();
+  yearInput.value = savedView?.year ?? today.getFullYear();
 
   if (createCalendarBtn) {
     createCalendarBtn.addEventListener("click", renderCalendar);
@@ -488,8 +570,20 @@ document.addEventListener("DOMContentLoaded", () => {
     clearMonthBtn.addEventListener("click", clearCurrentMonth);
   }
 
+  if (exportCalendarBtn) {
+    exportCalendarBtn.addEventListener("click", exportCalendarData);
+  }
+
+  if (importCalendarInput) {
+    importCalendarInput.addEventListener("change", () => {
+      importCalendarData(importCalendarInput.files?.[0]);
+      importCalendarInput.value = "";
+    });
+  }
+
   monthSelect.addEventListener("change", renderCalendar);
   yearInput.addEventListener("input", renderCalendar);
 
   renderCalendar();
+  updateSaveStatus();
 });
